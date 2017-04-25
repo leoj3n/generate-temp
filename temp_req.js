@@ -1,6 +1,6 @@
 var template = '<strong>THIS IS TEMP</strong>';
 
-function render(node){
+function render(node) {
 	var tempDiv = document.createElement("div");
 	tempDiv.className = "temp";
 	tempDiv.innerHTML = template;
@@ -11,6 +11,6 @@ function render(node){
 	return tempDiv;
 }
 
-module.exports = function(node){
+module.exports = function (node) {
 	render(node);
 };

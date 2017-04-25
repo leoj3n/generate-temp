@@ -7,15 +7,15 @@ var Browser = require("zombie"),
 
 Browser.localhost('127.0.0.1', 8081);
 
-var find = function(browser, property, callback, done){
+var find = function (browser, property, callback, done) {
 	var start = new Date();
-	var check = function(){
-		if(browser.window && browser.window[property]) {
+	var check = function () {
+		if (browser.window && browser.window[property]) {
 			callback(browser.window);
-		} else if(new Date() - start < 2000){
+		} else if (new Date() - start < 2000) {
 			setTimeout(check, 20);
 		} else {
-			done(new Error("failed to find "+property));
+			done(new Error("failed to find " + property));
 		}
 	};
 	check();
@@ -24,7 +24,7 @@ var find = function(browser, property, callback, done){
 var open = function (url, callback, done) {
 	var server = express().use('/', express.static(__dirname + '/')).listen(8081);
 	var browser = new Browser();
-	browser.on('error', function(err) {
+	browser.on('error', function (err) {
 		console.log('ZOMBIE ERROR', err);
 	})
 	browser.visit(url)
@@ -63,28 +63,28 @@ describe("generate", function () {
 			forceBuild: true,
 			minifyBuild: false
 		}).then(function () {
-      done();
+			done();
 		}, done);
 	});
 
-  it("test", function(done) {
+	it("test", function (done) {
 		this.timeout(40000);
 
-    open("temp/index.html", function (browser, close) {
-      find(browser, 'PACKAGES', function () {
-        browser.assert.success();
-        browser.assert.element('section.body');
+		open("temp/index.html", function (browser, close) {
+			find(browser, 'PACKAGES', function () {
+				browser.assert.success();
+				browser.assert.element('section.body');
 
-        var doc = browser.window.document;
-        var wrapper = doc.getElementsByClassName("demo_wrapper");
-        assert.equal(wrapper.length, 1, "Has window.document and .wrapper found");
+				var doc = browser.window.document;
+				var wrapper = doc.getElementsByClassName("demo_wrapper");
+				assert.equal(wrapper.length, 1, "Has window.document and .wrapper found");
 
-        browser.assert.element('.demo');
+				browser.assert.element('.demo');
 
-        close();
-        done();
-      }, done);
-    }, done);
-  });
+				close();
+				done();
+			}, done);
+		}, done);
+	});
 
 });

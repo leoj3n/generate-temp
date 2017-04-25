@@ -4,6 +4,12 @@ This generates the `temp` folder in test one, and tries to open that generated `
 
 To get started, first run `npm install`. To run the tests which will generate `temp`, do `npm test`.
 
+The generated `temp/index.html` looks like this when served using `http-server`:
+
+![](.github/THIS_IS_TEMP.png)
+
+Where **THIS IS TEMP** is added to the DOM post-load by a JavaScript file `temp.js` that is loaded by StealJS.
+
 ## Issues
 
 ### Zombie issue

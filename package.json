@@ -1,0 +1,27 @@
+{
+  "name": "generate-temp",
+  "version": "1.0.0",
+  "description": "generate temp",
+  "license": "MIT",
+  "main": "temp.js",
+  "scripts": {
+    "test": "mocha test.js --reporter spec"
+  },
+  "dependencies": {
+    "bit-docs-process-tags": "*",
+    "bit-docs-type-annotate": "*"
+  },
+  "devDependencies": {
+    "bit-docs-generate-html": "0.5.0-pre.4",
+    "express": "*",
+    "mocha": "*",
+    "steal": "*",
+    "steal-less": "*",
+    "zombie": "*"
+  },
+  "steal": {
+    "plugins": [
+      "steal-less"
+    ]
+  }
+}

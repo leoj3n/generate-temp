@@ -24,9 +24,6 @@ var find = function (browser, property, callback, done) {
 var open = function (url, callback, done) {
 	var server = express().use('/', express.static(__dirname + '/')).listen(8081);
 	var browser = new Browser();
-	browser.on('error', function (err) {
-		console.log('ZOMBIE ERROR', err);
-	})
 	browser.visit(url)
 		.then(function () {
 			callback(browser, function () {
@@ -76,7 +73,7 @@ describe("generate", function () {
 				browser.assert.element('section.body');
 
 				var doc = browser.window.document;
-				var wrapper = doc.getElementsByClassName("demo_wrapper");
+				var wrapper = doc.getElementsByClassName("wrapper");
 				assert.equal(wrapper.length, 1, "Has window.document and .wrapper found");
 
 				browser.assert.element('.demo');

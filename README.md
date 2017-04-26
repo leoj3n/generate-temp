@@ -14,8 +14,9 @@ Where **THIS IS TEMP** is added to the DOM post-load by a JavaScript file `temp.
 
 ### Zombie issue
 
-Related to issue: https://github.com/stealjs/steal/issues/1177
 Status: **SOLVED**
+
+Related to issue: https://github.com/stealjs/steal/issues/1177
 
 After running `npm test`, note that the second test in `test.js` cannot find `window.PACKAGES` because steal is not working under zombie.
 
@@ -27,8 +28,9 @@ For instance, in relation to the `devBuild` issue (below), you might want to man
 
 ### devBuild issue
 
-Related to issue: https://github.com/bit-docs/bit-docs-generate-html/issues/26
 Status: **UNSOLVED**
+
+Related to issue: https://github.com/bit-docs/bit-docs-generate-html/issues/26
 
 Another issue was recently discovered, and it has to do with `bit-docs-generate-html`:
 

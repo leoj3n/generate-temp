@@ -68,19 +68,37 @@ describe("generate", function () {
 		this.timeout(40000);
 
 		open("temp/index.html", function (browser, close) {
-			find(browser, 'PACKAGES', function () {
+			find(browser, 'PACKAGES', function (browserWindow) {
 				browser.assert.success();
 				browser.assert.element('section.body');
 
-				var doc = browser.window.document;
+				var doc = browserWindow.document;
 				var wrapper = doc.getElementsByClassName("wrapper");
 				assert.equal(wrapper.length, 1, "Has window.document and .wrapper found");
 
-				browser.assert.element('.demo');
+				browser.assert.element('strong');
 
 				close();
 				done();
 			}, done);
+		}, done);
+	});
+
+	it("test without find", function (done) {
+		this.timeout(40000);
+
+		open("temp/index.html", function (browser, close) {
+			browser.assert.success();
+			browser.assert.element('section.body');
+
+			var doc = browser.window.document;
+			var wrapper = doc.getElementsByClassName("wrapper");
+			assert.equal(wrapper.length, 1, "Has window.document and .wrapper found");
+
+			browser.assert.element('strong');
+
+			close();
+			done();
 		}, done);
 	});
 

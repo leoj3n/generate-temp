@@ -1,44 +1,24 @@
-var assert = require("assert"),
-	generate = require("bit-docs-generate-html/generate"),
-	path = require("path");
+var path = require("path"),
+	assert = require("assert"),
+	Browser = require("zombie"),
+	express = require('express'),
+	generate = require("bit-docs-generate-html/generate");
 
-var Browser = require("zombie"),
-	express = require('express');
+Browser.localhost('*.example.com', 3003);
 
-Browser.localhost('127.0.0.1', 8081);
-
-var find = function (browser, property, callback, done) {
-	var start = new Date();
-	var check = function () {
-		if (browser.window && browser.window[property]) {
-			callback(browser.window);
-		} else if (new Date() - start < 2000) {
-			setTimeout(check, 20);
-		} else {
-			done(new Error("failed to find " + property));
-		}
-	};
-	check();
-};
-
-var open = function (url, callback, done) {
-	var server = express().use('/', express.static(__dirname + '/')).listen(8081);
+describe('example', function () {
+	var server = express();
 	var browser = new Browser();
-	browser.visit(url)
-		.then(function () {
-			callback(browser, function () {
-				server.close();
-			});
-		}).catch(function (e) {
-			server.close();
-			done(e)
+
+	before(function () {
+		return new Promise(function (resolve, reject) {
+			server = server.use('/', express.static(__dirname)).listen(3003, resolve);
+			server.on('error', reject);
 		});
-};
+	});
 
-describe("generate", function () {
-
-	it("temp", function (done) {
-		this.timeout(40000);
+	it('can be generated', function () {
+		this.timeout(60000);
 
 		var docMap = Promise.resolve({
 			index: {
@@ -47,47 +27,29 @@ describe("generate", function () {
 			}
 		});
 
-		generate(docMap, {
+		var siteConfig = {
 			html: {
 				dependencies: {
-					"generate-temp": 'file:' + __dirname
+					"generate-temp": 'file://' + __dirname
 				}
 			},
 			dest: path.join(__dirname, "temp"),
-			debug: true,
-			devBuild: false,
+			debug: process.env.npm_config_debug,
+			devBuild: process.env.npm_config_devBuild,
 			parent: "index",
 			forceBuild: true,
 			minifyBuild: false
-		}).then(function () {
-			done();
-		}, done);
+		};
+
+		return generate(docMap, siteConfig);
 	});
 
-	it("test", function (done) {
-		this.timeout(40000);
+	describe('the generated page', function () {
+		before(function () {
+			return browser.visit('/temp/index.html');
+		});
 
-		open("temp/index.html", function (browser, close) {
-			find(browser, 'PACKAGES', function (browserWindow) {
-				browser.assert.success();
-				browser.assert.element('section.body');
-
-				var doc = browserWindow.document;
-				var wrapper = doc.getElementsByClassName("wrapper");
-				assert.equal(wrapper.length, 1, "Has window.document and .wrapper found");
-
-				browser.assert.element('strong');
-
-				close();
-				done();
-			}, done);
-		}, done);
-	});
-
-	it("test without find", function (done) {
-		this.timeout(40000);
-
-		open("temp/index.html", function (browser, close) {
+		it('should have content inserted', function () {
 			browser.assert.success();
 			browser.assert.element('section.body');
 
@@ -95,11 +57,12 @@ describe("generate", function () {
 			var wrapper = doc.getElementsByClassName("wrapper");
 			assert.equal(wrapper.length, 1, "Has window.document and .wrapper found");
 
-			browser.assert.element('strong');
-
-			close();
-			done();
-		}, done);
+			browser.assert.element('.inserted');
+		});
 	});
 
+	after(function () {
+		browser.destroy();
+		server.close();
+	});
 });

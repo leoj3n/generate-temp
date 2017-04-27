@@ -2,7 +2,7 @@ var template = '<strong>THIS IS TEMP</strong>';
 
 function render(node) {
 	var tempDiv = document.createElement("div");
-	tempDiv.className = "temp";
+	tempDiv.className = "inserted";
 	tempDiv.innerHTML = template;
 
 	node.innerHTML = "";

@@ -15,6 +15,7 @@
     "bit-docs-generate-html": "0.5.0-pre.4",
     "express": "*",
     "mocha": "*",
+    "rimraf": "*",
     "steal": "*",
     "steal-less": "*",
     "zombie": "*"
